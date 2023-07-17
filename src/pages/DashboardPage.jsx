@@ -31,7 +31,8 @@ import Home from "../components/home/Home";
 import AddOrEditCategory from "../components/categories/AddOrEditCategory";
 import ListCategory from "../components/categories/ListCategory";
 import { useDispatch, useSelector } from "react-redux";
-import { setMessage } from "../redux/actions/commonAction";
+import { setError, setMessage } from "../redux/actions/commonAction";
+import commonReducer from './../redux/reducers/commonReducer'
 
 const { Header, Sider, Content } = Layout;
 
@@ -41,7 +42,8 @@ function DashboardPage() {
 
   const navigate = useNavigate();
   
-  const msg = useSelector(state => state.commonReducer);
+  const msg = useSelector((state) => state.commonReducer.message);
+  const err = useSelector((state) => state.commonReducer.error);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -49,7 +51,11 @@ function DashboardPage() {
       dispatch(setMessage(''))
       message.success(msg)
     }
-  }, [msg])
+    if (err) {
+      dispatch(setError(''))
+      message.error(err)
+    }
+  }, [msg, err])
   
 
   const siteLayoutStyle = { marginLeft: marginLeft };

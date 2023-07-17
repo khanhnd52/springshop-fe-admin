@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 import withRouter from "../../helpers/withRouter";
-import {insertCategory} from "../../redux/actions/categoryAction"
+import { insertCategory } from "../../redux/actions/categoryAction";
 import { Button, Col, Divider, Form, Input, Row, Select } from "antd";
 import ContentHeader from "../common/ContentHeader";
 import { connect } from "react-redux";
@@ -14,6 +14,7 @@ class AddOrEditCategory extends Component {
   };
   render() {
     const { navigate } = this.props.router;
+    const { isLoading } = this.props;
     return (
       <div>
         <ContentHeader
@@ -46,6 +47,7 @@ class AddOrEditCategory extends Component {
                 htmlType="submit"
                 type="primary"
                 style={{ float: "right" }}
+                loading={isLoading}
               >
                 Save
               </Button>
@@ -57,15 +59,15 @@ class AddOrEditCategory extends Component {
   }
 }
 
-
-
-
 const mapStateToProps = (state) => ({
-  category: state.categoryReducer.category
-})
+  category: state.categoryReducer.category,
+  isLoading: state.commonReducer.isLoading,
+});
 
 const mapDispatchToProps = {
-  insertCategory
-}
+  insertCategory,
+};
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(AddOrEditCategory))
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(AddOrEditCategory)
+);

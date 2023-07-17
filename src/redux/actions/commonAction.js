@@ -1,7 +1,7 @@
 import { COMMON_MESSAGE_SET, COMMON_ERROR_SET, COMMON_LOADING_SET } from "./actionTypes"
 
 
-export const setMessage = (message) => (dispatch) => { 
+export const setMessage = (message) => async (dispatch) => { 
     dispatch({
         type: COMMON_MESSAGE_SET,
         payload: message

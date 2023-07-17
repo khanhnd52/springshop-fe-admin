@@ -4,6 +4,7 @@ import {
   CATEGORY_SET,
   CATEGORY_STATE_CLEAR,
   COMMON_ERROR_SET,
+  COMMON_LOADING_SET,
   COMMON_MESSAGE_SET,
 } from "./actionTypes";
 
@@ -12,6 +13,11 @@ export const insertCategory = (category, navigate) => async (dispatch) => {
 
   try {
     console.log("insert category");
+
+    dispatch({
+      type: COMMON_LOADING_SET,
+      payload: true,
+    });
 
     const response = await service.insertCategory(category);
 
@@ -22,13 +28,13 @@ export const insertCategory = (category, navigate) => async (dispatch) => {
       });
       dispatch({
         type: COMMON_MESSAGE_SET,
-        payload: 'Category is saved'
-      })
-    }else {
+        payload: "Category is saved",
+      });
+    } else {
       dispatch({
         type: COMMON_ERROR_SET,
-        payload: response.message
-      })
+        payload: response.message,
+      });
     }
 
     console.log(response);
@@ -36,10 +42,15 @@ export const insertCategory = (category, navigate) => async (dispatch) => {
     console.log("Error" + error);
     dispatch({
       type: COMMON_ERROR_SET,
-      payload: error
-    })
+      payload: error.response.data
+        ? error.response.data.message
+        : error.message,
+    });
   }
-
+  dispatch({
+    type: COMMON_LOADING_SET,
+    payload: false,
+  });
   navigate("/categories/list");
 };
 
@@ -47,10 +58,14 @@ export const getCategories = () => async (dispatch) => {
   const service = new CategoryService();
 
   try {
+    dispatch({
+      type: COMMON_LOADING_SET,
+      payload: true,
+    });
     console.log("get categories");
     const response = await service.getCategories();
 
-    console.log(response)
+    console.log(response);
 
     if (response.status === 200) {
       dispatch({
@@ -60,15 +75,21 @@ export const getCategories = () => async (dispatch) => {
     } else {
       dispatch({
         type: COMMON_ERROR_SET,
-        payload: response.message
-      })
+        payload: response.message,
+      });
     }
   } catch (error) {
     console.log(error);
     dispatch({
       type: COMMON_ERROR_SET,
-      payload: error
-    })
+      payload: error.response.data
+        ? error.response.data.message
+        : error.message,
+    });
+    dispatch({
+      type: COMMON_LOADING_SET,
+      payload: false,
+    });
   }
 };
 

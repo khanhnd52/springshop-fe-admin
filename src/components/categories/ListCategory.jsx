@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import withRouter from "../../helpers/withRouter";
-import { Button, Modal, Space, Table, Tag } from "antd";
+import { Button, Modal, Skeleton, Space, Table, Tag } from "antd";
 import ContentHeader from "../common/ContentHeader";
 import Column from "antd/lib/table/Column";
 import {
@@ -33,13 +33,13 @@ class ListCategory extends Component {
   componentDidMount = () => {
     this.props.getCategories();
 
-    console.log('did mount')
-  }
+    console.log("did mount");
+  };
 
   componentWillUnmount = () => {
     this.props.clearCategoryState();
-    console.log('will unmount')
-  }
+    console.log("will unmount");
+  };
 
   editCategory = (category) => {
     console.log(category);
@@ -68,7 +68,21 @@ class ListCategory extends Component {
 
   render() {
     const { navigate } = this.props.router;
-    const {categories} = this.props;
+    const { categories, isLoading } = this.props;
+
+    if (isLoading) {
+      return (
+        <>
+          <ContentHeader
+            navigate={navigate}
+            title="List Categories"
+            className="site-page-header"
+          ></ContentHeader>
+          <Skeleton active></Skeleton>
+        </>
+      );
+    }
+
     return (
       <div>
         <ContentHeader
@@ -77,11 +91,7 @@ class ListCategory extends Component {
           className="site-page-header"
         ></ContentHeader>
 
-        <Table
-          dataSource={categories}
-          size="small"
-          rowKey="id"
-        >
+        <Table dataSource={categories} size="small" rowKey="id">
           <Column
             title="Category ID"
             key="id"
@@ -141,6 +151,7 @@ class ListCategory extends Component {
 
 const mapStateToProps = (state) => ({
   categories: state.categoryReducer.categories,
+  isLoading: state.commonReducer.isLoading,
 });
 
 const mapDispatchToProps = {
