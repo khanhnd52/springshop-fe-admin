@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./DashboardPage.css";
 
 import {
@@ -6,7 +6,7 @@ import {
   MenuUnfoldOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Avatar, Button, Col, Layout, Menu, Row, theme } from "antd";
+import { Avatar, Button, Col, Layout, Menu, Row, message, theme } from "antd";
 import { useState } from "react";
 import {
   MdAddCircleOutline,
@@ -22,7 +22,6 @@ import {
   MdSupervisorAccount,
 } from "react-icons/md";
 import {
-  BrowserRouter,
   Outlet,
   Route,
   Routes,
@@ -31,6 +30,9 @@ import {
 import Home from "../components/home/Home";
 import AddOrEditCategory from "../components/categories/AddOrEditCategory";
 import ListCategory from "../components/categories/ListCategory";
+import { useDispatch, useSelector } from "react-redux";
+import { setMessage } from "../redux/actions/commonAction";
+
 const { Header, Sider, Content } = Layout;
 
 function DashboardPage() {
@@ -38,6 +40,17 @@ function DashboardPage() {
   const [collapsed, setCollapsed] = useState(false);
 
   const navigate = useNavigate();
+  
+  const msg = useSelector(state => state.commonReducer);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (msg) {
+      dispatch(setMessage(''))
+      message.success(msg)
+    }
+  }, [msg])
+  
 
   const siteLayoutStyle = { marginLeft: marginLeft };
   const {
@@ -200,4 +213,8 @@ function DashboardPage() {
   );
 }
 
+
+
 export default DashboardPage;
+
+
