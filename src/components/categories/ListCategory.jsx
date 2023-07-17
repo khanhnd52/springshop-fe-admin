@@ -3,51 +3,72 @@ import withRouter from "../../helpers/withRouter";
 import { Button, Modal, Space, Table, Tag } from "antd";
 import ContentHeader from "../common/ContentHeader";
 import Column from "antd/lib/table/Column";
+import {
+  getCategories,
+  clearCategoryState,
+} from "../../redux/actions/categoryAction";
 
-import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
+import {
+  EditOutlined,
+  DeleteOutlined,
+  ExclamationCircleOutlined,
+} from "@ant-design/icons";
+import { connect } from "react-redux";
 
 class ListCategory extends Component {
   constructor() {
     super();
     this.state = {
-      dataSource: [
-        { categoryId: 1, name: "Computer", status: 0 },
-        { categoryId: 2, name: "Laptop", status: 0 },
-        { categoryId: 3, name: "PC", status: 1 },
-        { categoryId: 4, name: "Mouse", status: 1 },
-        { categoryId: 5, name: "Server", status: 0 },
-      ],
+      // dataSource: [
+      //   { categoryId: 1, name: "Computer", status: 0 },
+      //   { categoryId: 2, name: "Laptop", status: 0 },
+      //   { categoryId: 3, name: "PC", status: 1 },
+      //   { categoryId: 4, name: "Mouse", status: 1 },
+      //   { categoryId: 5, name: "Server", status: 0 },
+      // ],
       categoty: {},
     };
+  }
+
+  componentDidMount = () => {
+    this.props.getCategories();
+
+    console.log('did mount')
+  }
+
+  componentWillUnmount = () => {
+    this.props.clearCategoryState();
+    console.log('will unmount')
   }
 
   editCategory = (category) => {
     console.log(category);
   };
 
-  deleteCategory = () => { 
-    console.log(this.state.categoty)
-   }
+  deleteCategory = () => {
+    console.log(this.state.categoty);
+  };
 
   openDeleteConfirmModal = (category) => {
     this.setState({ ...this.state, category: category });
 
     console.log(category);
 
-    const message = 'Do you want to delete the category' + category.name;
+    const message = "Do you want to delete the category" + category.name;
 
     Modal.confirm({
-      title: 'Confirm',
+      title: "Confirm",
       icon: <ExclamationCircleOutlined></ExclamationCircleOutlined>,
       content: message,
       onOk: this.deleteCategory,
       okText: "Delete",
-      cancelText: "Cancel"
-    })
+      cancelText: "Cancel",
+    });
   };
 
   render() {
     const { navigate } = this.props.router;
+    const {categories} = this.props;
     return (
       <div>
         <ContentHeader
@@ -57,14 +78,14 @@ class ListCategory extends Component {
         ></ContentHeader>
 
         <Table
-          dataSource={this.state.dataSource}
+          dataSource={categories}
           size="small"
-          rowKey="categoryId"
+          rowKey="id"
         >
           <Column
             title="Category ID"
-            key="categoryId"
-            dataIndex="categoryId"
+            key="id"
+            dataIndex="id"
             width={40}
             align="center"
           ></Column>
@@ -118,4 +139,15 @@ class ListCategory extends Component {
   }
 }
 
-export default withRouter(ListCategory);
+const mapStateToProps = (state) => ({
+  categories: state.categoryReducer.categories,
+});
+
+const mapDispatchToProps = {
+  getCategories,
+  clearCategoryState,
+};
+
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(ListCategory)
+);
