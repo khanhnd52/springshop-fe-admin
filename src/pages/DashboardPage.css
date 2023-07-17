@@ -1,0 +1,15 @@
+.logo h2 {
+
+        color: #fff;
+        font-weight: bold;
+        text-align: center;
+        margin-top: 16px;
+        margin-bottom: 16px;
+    
+}
+
+.content-panel {
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+    padding: 16px;
+    height: 80vh;
+}
