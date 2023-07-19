@@ -1,5 +1,6 @@
 import {
   CATEGORIES_SET,
+  CATEGORY_DELETE,
   CATEGORY_SET,
   CATEGORY_STATE_CLEAR,
 } from "../actions/actionTypes";
@@ -15,6 +16,8 @@ const categoryReducer = (state = initialState, { type, payload }) => {
       return { ...state, category: payload };
     case CATEGORIES_SET:
       return { ...state, categories: payload };
+    case CATEGORY_DELETE:
+      return { ...state, categories: state.categories.filter((category) => category.id !== payload) };
     case CATEGORY_STATE_CLEAR:
       return {
         category: {},

@@ -6,6 +6,7 @@ import Column from "antd/lib/table/Column";
 import {
   getCategories,
   clearCategoryState,
+  deleteCategory
 } from "../../redux/actions/categoryAction";
 
 import {
@@ -16,6 +17,7 @@ import {
 import { connect } from "react-redux";
 
 class ListCategory extends Component {
+  
   constructor() {
     super();
     this.state = {
@@ -43,14 +45,20 @@ class ListCategory extends Component {
 
   editCategory = (category) => {
     console.log(category);
+
+    const {navigate} = this.props.router
+    navigate("/categories/update/" + category.id)
   };
 
-  deleteCategory = () => {
-    console.log(this.state.categoty);
-  };
+  // deleteCategory = () => {
+  //   console.log(this.state.category);
+  // };
 
   openDeleteConfirmModal = (category) => {
-    this.setState({ ...this.state, category: category });
+    this.setState({ ...this.state, category: category }
+      
+      );
+
 
     console.log(category);
 
@@ -60,7 +68,11 @@ class ListCategory extends Component {
       title: "Confirm",
       icon: <ExclamationCircleOutlined></ExclamationCircleOutlined>,
       content: message,
-      onOk: this.deleteCategory,
+      onOk: () => {
+        this.props.deleteCategory(category.id).then(() => {
+          this.props.getCategories();
+        });
+      },
       okText: "Delete",
       cancelText: "Cancel",
     });
@@ -108,7 +120,7 @@ class ListCategory extends Component {
             render={(_, { status }) => {
               let color = "red";
               let name = "In-visible";
-              if (status === 0) {
+              if (status === 'Visible') {
                 color = "green";
                 name = "Visible";
               }
@@ -157,6 +169,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   getCategories,
   clearCategoryState,
+  deleteCategory
 };
 
 export default withRouter(

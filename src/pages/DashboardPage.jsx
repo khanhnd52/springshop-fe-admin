@@ -203,7 +203,11 @@ function DashboardPage() {
             <Route path="/" element={<Home></Home>}></Route>
             <Route
               path="/categories/add"
-              element={<AddOrEditCategory></AddOrEditCategory>}
+              element={<AddOrEditCategory key='a'></AddOrEditCategory>}
+            ></Route>
+            <Route
+              path="/categories/update/:id"
+              element={<AddOrEditCategory key='u'></AddOrEditCategory>}
             ></Route>
             <Route
               path="/categories/list"
