@@ -90,7 +90,7 @@ class ManufacturerForm extends Component {
             initialValue={manufacturer.name}
             rules={[{ required: true, min: 2 }]}
           >
-            <Input readOnly></Input>
+            <Input></Input>
           </Form.Item>
           <Form.Item
             label="Logo"

@@ -4,23 +4,27 @@ import ManufacturerList from "./ManufacturerList";
 import withRouter from "../../helpers/withRouter";
 import { Button, Col, Row } from "antd";
 import ManufacturerForm from "./ManufacturerForm";
+import { connect } from "react-redux";
+import { insertManufacturer } from "../../redux/actions/manufacturerAction";
 
 class ListManufacturers extends Component {
-    constructor(props) {
-      super(props)
-    
-      this.state = {
-         open: false
-      }
-    }
+  constructor(props) {
+    super(props);
 
-    onCreate = (values) => { 
-        console.log(values)
-     }
+    this.state = {
+      open: false,
+    };
+  }
+
+  onCreate = (values) => {
+    console.log(values);
+
+    this.props.insertManufacturer(values);
+  };
 
   render() {
     const { navigate } = this.props.router;
-    const {open} = this.state
+    const { open } = this.state;
     return (
       <>
         <ContentHeader
@@ -33,7 +37,7 @@ class ListManufacturers extends Component {
             <Button
               type="primary"
               onClick={() => {
-                this.setState({...this.state, open: true});
+                this.setState({ ...this.state, open: true });
               }}
             >
               New Manufacturer
@@ -46,7 +50,7 @@ class ListManufacturers extends Component {
           open={open}
           onCreate={this.onCreate}
           onCancel={() => {
-            this.setState({...this.state, open: false});
+            this.setState({ ...this.state, open: false });
           }}
         />
       </>
@@ -54,4 +58,13 @@ class ListManufacturers extends Component {
   }
 }
 
-export default withRouter(ListManufacturers);
+const mapStateToProps = (state) => ({});
+
+const mapDispatchToProps = {
+  insertManufacturer,
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withRouter(ListManufacturers));
