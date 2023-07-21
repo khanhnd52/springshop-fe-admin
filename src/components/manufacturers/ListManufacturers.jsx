@@ -9,6 +9,7 @@ import {
   insertManufacturer,
   getManufacturers,
   deleteManufacturer,
+  updateManufacturer,
 } from "../../redux/actions/manufacturerAction";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 
@@ -18,7 +19,7 @@ class ListManufacturers extends Component {
 
     this.state = {
       open: false,
-      manufacturer: {},
+      manufacturer: { id: "", name: "", logo: "" },
     };
   }
 
@@ -30,8 +31,17 @@ class ListManufacturers extends Component {
 
   onCreate = (values) => {
     console.log(values);
+    if (values.id) {
+      this.props.updateManufacturer(values);
+    } else {
+      this.props.insertManufacturer(values);
+    }
 
-    this.props.insertManufacturer(values);
+    this.setState({ ...this.state, manufacturer: {}, open: false });
+  };
+
+  onEdit = (value) => {
+    this.setState({ ...this.state, manufacturer: value, open: true });
   };
 
   deleteManufacturer = () => {
@@ -82,9 +92,11 @@ class ListManufacturers extends Component {
         <ManufacturerList
           dataSource={manufacturers}
           onDeleteConfirm={this.onDeleteConfirm}
+          onEdit={this.onEdit}
         ></ManufacturerList>
 
         <ManufacturerForm
+          manufacturer={this.state.manufacturer}
           open={open}
           onCreate={this.onCreate}
           onCancel={() => {
@@ -104,6 +116,7 @@ const mapDispatchToProps = {
   insertManufacturer,
   getManufacturers,
   deleteManufacturer,
+  updateManufacturer,
 };
 
 export default connect(
