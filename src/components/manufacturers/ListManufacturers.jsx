@@ -2,7 +2,16 @@ import React, { Component } from "react";
 import ContentHeader from "../common/ContentHeader";
 import ManufacturerList from "./ManufacturerList";
 import withRouter from "../../helpers/withRouter";
-import { Button, Col, Divider, Modal, Row } from "antd";
+import {
+  Button,
+  Col,
+  Divider,
+  Form,
+  Input,
+  Modal,
+  Pagination,
+  Row,
+} from "antd";
 import ManufacturerForm from "./ManufacturerForm";
 import { connect } from "react-redux";
 import {
@@ -10,6 +19,7 @@ import {
   getManufacturers,
   deleteManufacturer,
   updateManufacturer,
+  getManufacturersByName,
 } from "../../redux/actions/manufacturerAction";
 import { ExclamationCircleOutlined } from "@ant-design/icons";
 
@@ -65,10 +75,47 @@ class ListManufacturers extends Component {
     });
   };
 
+  // onShowSizeChange = (current, pageSize) => {
+  //   console.log(current, pageSize);
+
+  //   const { pagination } = this.props;
+  //   const params = {
+  //     query: pagination.query,
+  //     page: 0,
+  //     size: pageSize,
+  //   };
+
+  //   this.props.getManufacturersByName(params);
+  // };
+
+  onChange = (pageNumber, pageSize) => {
+
+    const { pagination } = this.props;
+    const params = {
+      query: pagination.query,
+      page: pageNumber -1,
+      size: pageSize,
+    };
+
+    this.props.getManufacturersByName(params);
+  };
+
+  handleSearch = (value) => {
+    console.log(value);
+
+    const { pagination } = this.props;
+    const params = {
+      query: value.query,
+      size: pagination.size,
+    };
+
+    this.props.getManufacturersByName(params);
+  };
+
   render() {
     const { navigate } = this.props.router;
     const { open } = this.state;
-    const { manufacturers } = this.props;
+    const { manufacturers, pagination } = this.props;
     return (
       <>
         <ContentHeader
@@ -76,8 +123,22 @@ class ListManufacturers extends Component {
           title="List Manufacturers"
           className="site-page-header"
         ></ContentHeader>
-        <Row>
-          <Col md={24}>
+        <Row style={{ marginBottom: 8 }}>
+          <Col md={18}>
+            <Form
+              layout="inline"
+              name="searchForm"
+              onFinish={this.handleSearch}
+            >
+              <Form.Item name="query" initialValue={pagination.query}>
+                <Input></Input>
+              </Form.Item>
+              <Button type="primary" htmlType="submit">
+                Search
+              </Button>
+            </Form>
+          </Col>
+          <Col md={6}>
             <Button
               type="primary"
               onClick={() => {
@@ -95,6 +156,19 @@ class ListManufacturers extends Component {
           onEdit={this.onEdit}
         ></ManufacturerList>
 
+        <Row style={{ marginTop: 8 }}>
+          <Col md={24} style={{ textAlign: "right" }}>
+            <Pagination
+              defaultCurrent={pagination.page}
+              defaultPageSize={pagination.size}
+              total={pagination.totalElements}
+              //onShowSizeChange={this.onShowSizeChange}
+              onChange={this.onChange}
+              showSizeChanger="true"
+            ></Pagination>
+          </Col>
+        </Row>
+
         <ManufacturerForm
           manufacturer={this.state.manufacturer}
           open={open}
@@ -110,6 +184,7 @@ class ListManufacturers extends Component {
 
 const mapStateToProps = (state) => ({
   manufacturers: state.manufacturerReducer.manufacturers,
+  pagination: state.manufacturerReducer.pagination,
 });
 
 const mapDispatchToProps = {
@@ -117,6 +192,7 @@ const mapDispatchToProps = {
   getManufacturers,
   deleteManufacturer,
   updateManufacturer,
+  getManufacturersByName,
 };
 
 export default connect(
