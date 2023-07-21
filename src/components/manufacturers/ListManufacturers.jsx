@@ -2,13 +2,15 @@ import React, { Component } from "react";
 import ContentHeader from "../common/ContentHeader";
 import ManufacturerList from "./ManufacturerList";
 import withRouter from "../../helpers/withRouter";
-import { Button, Col, Divider, Row } from "antd";
+import { Button, Col, Divider, Modal, Row } from "antd";
 import ManufacturerForm from "./ManufacturerForm";
 import { connect } from "react-redux";
 import {
   insertManufacturer,
   getManufacturers,
+  deleteManufacturer,
 } from "../../redux/actions/manufacturerAction";
+import { ExclamationCircleOutlined } from "@ant-design/icons";
 
 class ListManufacturers extends Component {
   constructor(props) {
@@ -16,6 +18,7 @@ class ListManufacturers extends Component {
 
     this.state = {
       open: false,
+      manufacturer: {},
     };
   }
 
@@ -29,6 +32,27 @@ class ListManufacturers extends Component {
     console.log(values);
 
     this.props.insertManufacturer(values);
+  };
+
+  deleteManufacturer = () => {
+    this.props.deleteManufacturer(this.state.manufacturer.id);
+
+    console.log("delete manufacturer");
+  };
+
+  onDeleteConfirm = (value) => {
+    this.setState({ ...this.state, manufacturer: value });
+
+    const message = "Do you want to delete the manufacturer" + value.name;
+
+    Modal.confirm({
+      title: "Confirm",
+      icon: <ExclamationCircleOutlined></ExclamationCircleOutlined>,
+      content: message,
+      onOk: this.deleteManufacturer,
+      okText: "Delete",
+      cancelText: "Cancel",
+    });
   };
 
   render() {
@@ -55,7 +79,10 @@ class ListManufacturers extends Component {
           </Col>
         </Row>
         <Divider></Divider>
-        <ManufacturerList dataSource={manufacturers}></ManufacturerList>
+        <ManufacturerList
+          dataSource={manufacturers}
+          onDeleteConfirm={this.onDeleteConfirm}
+        ></ManufacturerList>
 
         <ManufacturerForm
           open={open}
@@ -76,6 +103,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = {
   insertManufacturer,
   getManufacturers,
+  deleteManufacturer,
 };
 
 export default connect(
