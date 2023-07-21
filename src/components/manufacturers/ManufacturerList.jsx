@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import { Button, Image, Space, Table, Tag } from "antd";
+import { Button, Image, Space, Table } from "antd";
 import Column from "antd/es/table/Column";
 import {
   EditOutlined,
   DeleteOutlined,
-  ExclamationCircleOutlined,
 } from "@ant-design/icons";
+import ManufacturerService from "../../services/manufacturerService";
 
 class ManufacturerList extends Component {
   render() {
@@ -20,7 +20,10 @@ class ManufacturerList extends Component {
           align="center"
           render={(_, record) => (
             <Space size={"middle"}>
-              <Image width="100%" src={record.log}></Image>
+              <Image
+                width="70%"
+                src={ManufacturerService.getManufacturerLogoUrl(record.logo)}
+              ></Image>
             </Space>
           )}
         ></Column>

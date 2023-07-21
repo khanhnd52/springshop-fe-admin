@@ -3,11 +3,11 @@ import { API_MANUFACTURER } from "./constant";
 
 export default class ManufacturerService {
   insertManufacturer = async (manufacturer) => {
-    let formData = new FormData()
+    let formData = new FormData();
 
-    formData.append("name", manufacturer.name)
+    formData.append("name", manufacturer.name);
     if (manufacturer.logoFile[0].originFileObj) {
-        formData.append("logoFile", manufacturer.logoFile[0].originFileObj)
+      formData.append("logoFile", manufacturer.logoFile[0].originFileObj);
     }
     return await axios.post(API_MANUFACTURER, formData);
   };
@@ -22,5 +22,8 @@ export default class ManufacturerService {
   };
   updateManufacturer = async (id, manufacturer) => {
     return await axios.patch(API_MANUFACTURER + "/" + id, manufacturer);
+  };
+  static getManufacturerLogoUrl = (fileName) => {
+    return API_MANUFACTURER + "/logo/" + fileName;
   };
 }

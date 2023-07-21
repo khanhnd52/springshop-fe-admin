@@ -5,7 +5,6 @@ import {
   Image,
   Input,
   Modal,
-  Radio,
   Upload,
 } from "antd";
 import React, { Component, createRef } from "react";
