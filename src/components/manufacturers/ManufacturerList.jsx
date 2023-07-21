@@ -1,17 +1,19 @@
 import React, { Component } from "react";
 import { Button, Image, Space, Table } from "antd";
 import Column from "antd/es/table/Column";
-import {
-  EditOutlined,
-  DeleteOutlined,
-} from "@ant-design/icons";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import ManufacturerService from "../../services/manufacturerService";
 
 class ManufacturerList extends Component {
   render() {
     const { dataSource, onEdit, onDeleteConfirm } = this.props;
     return (
-      <Table dataSource={dataSource} size="small" rowKey="id">
+      <Table
+        dataSource={dataSource}
+        size="small"
+        rowKey="id"
+        pagination={false}
+      >
         <Column
           title="Logo"
           key="logo"

@@ -20,6 +20,9 @@ export default class ManufacturerService {
   getManufacturer = async (id) => {
     return await axios.get(API_MANUFACTURER + "/" + id + "/get");
   };
+  getManufacturersByName = async (params) => {
+    return await axios.get(API_MANUFACTURER + "/find", { params });
+  };
   updateManufacturer = async (id, manufacturer) => {
     let formData = new FormData();
 

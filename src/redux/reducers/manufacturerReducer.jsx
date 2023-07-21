@@ -3,12 +3,20 @@ import {
   MANUFACTURERS_SET,
   MANUFACTURER_DELETE,
   MANUFACTURER_SET,
+  MANUFACTURER_SET_PAGEABLE,
   MANUFACTURER_UPDATE,
 } from "../actions/actionTypes";
 
 const initialState = {
   manufacturer: {},
   manufacturers: [],
+  pagination: {
+    size: 5,
+    page: 0,
+    totalElements: 0,
+    query: '',
+    totalPages: 1
+  }
 };
 
 const manufacturerReducer = (state = initialState, { type, payload }) => {
@@ -19,6 +27,8 @@ const manufacturerReducer = (state = initialState, { type, payload }) => {
       return { ...state, manufacturers: payload };
     case MANUFACTURERS_APPEND:
       return { ...state, manufacturers: [payload, ...state.manufacturers] };
+    case MANUFACTURER_SET_PAGEABLE:
+      return { ...state, pagination: payload };
     case MANUFACTURER_DELETE:
       return {
         ...state,
