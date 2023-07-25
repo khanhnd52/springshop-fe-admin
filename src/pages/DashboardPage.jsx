@@ -21,18 +21,14 @@ import {
   MdRequestPage,
   MdSupervisorAccount,
 } from "react-icons/md";
-import {
-  Outlet,
-  Route,
-  Routes,
-  useNavigate,
-} from "react-router-dom";
+import { Outlet, Route, Routes, useNavigate } from "react-router-dom";
 import Home from "../components/home/Home";
 import AddOrEditCategory from "../components/categories/AddOrEditCategory";
 import ListCategory from "../components/categories/ListCategory";
 import { useDispatch, useSelector } from "react-redux";
 import { setError, setMessage } from "../redux/actions/commonAction";
-import commonReducer from './../redux/reducers/commonReducer'
+import commonReducer from "./../redux/reducers/commonReducer";
+import ListManufacturers from "../components/manufacturers/ListManufacturers";
 
 const { Header, Sider, Content } = Layout;
 
@@ -41,22 +37,21 @@ function DashboardPage() {
   const [collapsed, setCollapsed] = useState(false);
 
   const navigate = useNavigate();
-  
+
   const msg = useSelector((state) => state.commonReducer.message);
   const err = useSelector((state) => state.commonReducer.error);
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (msg) {
-      dispatch(setMessage(''))
-      message.success(msg)
+      dispatch(setMessage(""));
+      message.success(msg);
     }
     if (err) {
-      dispatch(setError(''))
-      message.error(err)
+      dispatch(setError(""));
+      message.error(err);
     }
-  }, [msg, err])
-  
+  }, [msg, err]);
 
   const siteLayoutStyle = { marginLeft: marginLeft };
   const {
@@ -107,6 +102,31 @@ function DashboardPage() {
                   icon: <MdFormatListBulleted />,
                   label: "List Categories",
                   onClick: () => navigate("/categories/list"),
+                },
+              ],
+            },
+            {
+              key: "23",
+              icon: <MdCategory />,
+              label: "Others",
+              children: [
+                {
+                  key: "231",
+                  icon: <MdAddCircleOutline />,
+                  label: "List Manufacturers",
+                  onClick: () => navigate("/manufacturers/list"),
+                },
+                {
+                  key: "232",
+                  icon: <MdFormatListBulleted />,
+                  label: "List Countries",
+                  onClick: () => navigate("/coutries/list"),
+                },
+                {
+                  key: "233",
+                  icon: <MdFormatListBulleted />,
+                  label: "List Provinces",
+                  onClick: () => navigate("/provinces/list"),
                 },
               ],
             },
@@ -195,36 +215,34 @@ function DashboardPage() {
             minHeight: 280,
             background: colorBgContainer,
             marginTop: 80,
-            
           }}
         >
-        <div className="content-panel">
-        <Routes>
-            <Route path="/" element={<Home></Home>}></Route>
-            <Route
-              path="/categories/add"
-              element={<AddOrEditCategory key='a'></AddOrEditCategory>}
-            ></Route>
-            <Route
-              path="/categories/update/:id"
-              element={<AddOrEditCategory key='u'></AddOrEditCategory>}
-            ></Route>
-            <Route
-              path="/categories/list"
-              element={<ListCategory></ListCategory>}
-            ></Route>
-          </Routes>
-          <Outlet></Outlet>
-        </div>
-          
+          <div className="content-panel">
+            <Routes>
+              <Route path="/" element={<Home></Home>}></Route>
+              <Route
+                path="/categories/add"
+                element={<AddOrEditCategory key="a"></AddOrEditCategory>}
+              ></Route>
+              <Route
+                path="/categories/update/:id"
+                element={<AddOrEditCategory key="u"></AddOrEditCategory>}
+              ></Route>
+              <Route
+                path="/categories/list"
+                element={<ListCategory></ListCategory>}
+              ></Route>
+              <Route
+                path="/manufacturers/list"
+                element={<ListManufacturers />}
+              ></Route>
+            </Routes>
+            <Outlet></Outlet>
+          </div>
         </Content>
       </Layout>
     </Layout>
   );
 }
 
-
-
 export default DashboardPage;
-
-
