@@ -1,53 +1,100 @@
 import React, { Component } from "react";
 import withRouter from "../../helpers/withRouter";
-import { Button, Modal, Space, Table, Tag } from "antd";
+import { Button, Modal, Skeleton, Space, Table, Tag } from "antd";
 import ContentHeader from "../common/ContentHeader";
 import Column from "antd/lib/table/Column";
+import {
+  getCategories,
+  clearCategoryState,
+  deleteCategory
+} from "../../redux/actions/categoryAction";
 
-import { EditOutlined, DeleteOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
+import {
+  EditOutlined,
+  DeleteOutlined,
+  ExclamationCircleOutlined,
+} from "@ant-design/icons";
+import { connect } from "react-redux";
 
 class ListCategory extends Component {
+  
   constructor() {
     super();
     this.state = {
-      dataSource: [
-        { categoryId: 1, name: "Computer", status: 0 },
-        { categoryId: 2, name: "Laptop", status: 0 },
-        { categoryId: 3, name: "PC", status: 1 },
-        { categoryId: 4, name: "Mouse", status: 1 },
-        { categoryId: 5, name: "Server", status: 0 },
-      ],
+      // dataSource: [
+      //   { categoryId: 1, name: "Computer", status: 0 },
+      //   { categoryId: 2, name: "Laptop", status: 0 },
+      //   { categoryId: 3, name: "PC", status: 1 },
+      //   { categoryId: 4, name: "Mouse", status: 1 },
+      //   { categoryId: 5, name: "Server", status: 0 },
+      // ],
       categoty: {},
     };
   }
 
-  editCategory = (category) => {
-    console.log(category);
+  componentDidMount = () => {
+    this.props.getCategories();
+
+    console.log("did mount");
   };
 
-  deleteCategory = () => { 
-    console.log(this.state.categoty)
-   }
+  componentWillUnmount = () => {
+    this.props.clearCategoryState();
+    console.log("will unmount");
+  };
+
+  editCategory = (category) => {
+    console.log(category);
+
+    const {navigate} = this.props.router
+    navigate("/categories/update/" + category.id)
+  };
+
+  // deleteCategory = () => {
+  //   console.log(this.state.category);
+  // };
 
   openDeleteConfirmModal = (category) => {
-    this.setState({ ...this.state, category: category });
+    this.setState({ ...this.state, category: category }
+      
+      );
+
 
     console.log(category);
 
-    const message = 'Do you want to delete the category' + category.name;
+    const message = "Do you want to delete the category" + category.name;
 
     Modal.confirm({
-      title: 'Confirm',
+      title: "Confirm",
       icon: <ExclamationCircleOutlined></ExclamationCircleOutlined>,
       content: message,
-      onOk: this.deleteCategory,
+      onOk: () => {
+        this.props.deleteCategory(category.id).then(() => {
+          this.props.getCategories();
+        });
+      },
       okText: "Delete",
-      cancelText: "Cancel"
-    })
+      cancelText: "Cancel",
+    });
   };
 
   render() {
     const { navigate } = this.props.router;
+    const { categories, isLoading } = this.props;
+
+    if (isLoading) {
+      return (
+        <>
+          <ContentHeader
+            navigate={navigate}
+            title="List Categories"
+            className="site-page-header"
+          ></ContentHeader>
+          <Skeleton active></Skeleton>
+        </>
+      );
+    }
+
     return (
       <div>
         <ContentHeader
@@ -56,15 +103,11 @@ class ListCategory extends Component {
           className="site-page-header"
         ></ContentHeader>
 
-        <Table
-          dataSource={this.state.dataSource}
-          size="small"
-          rowKey="categoryId"
-        >
+        <Table dataSource={categories} size="small" rowKey="id">
           <Column
             title="Category ID"
-            key="categoryId"
-            dataIndex="categoryId"
+            key="id"
+            dataIndex="id"
             width={40}
             align="center"
           ></Column>
@@ -77,7 +120,7 @@ class ListCategory extends Component {
             render={(_, { status }) => {
               let color = "red";
               let name = "In-visible";
-              if (status === 0) {
+              if (status === 'Visible') {
                 color = "green";
                 name = "Visible";
               }
@@ -118,4 +161,17 @@ class ListCategory extends Component {
   }
 }
 
-export default withRouter(ListCategory);
+const mapStateToProps = (state) => ({
+  categories: state.categoryReducer.categories,
+  isLoading: state.commonReducer.isLoading,
+});
+
+const mapDispatchToProps = {
+  getCategories,
+  clearCategoryState,
+  deleteCategory
+};
+
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(ListCategory)
+);

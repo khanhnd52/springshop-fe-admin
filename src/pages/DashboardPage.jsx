@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./DashboardPage.css";
 
 import {
@@ -6,7 +6,7 @@ import {
   MenuUnfoldOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Avatar, Button, Col, Layout, Menu, Row, theme } from "antd";
+import { Avatar, Button, Col, Layout, Menu, Row, message, theme } from "antd";
 import { useState } from "react";
 import {
   MdAddCircleOutline,
@@ -22,7 +22,6 @@ import {
   MdSupervisorAccount,
 } from "react-icons/md";
 import {
-  BrowserRouter,
   Outlet,
   Route,
   Routes,
@@ -31,6 +30,10 @@ import {
 import Home from "../components/home/Home";
 import AddOrEditCategory from "../components/categories/AddOrEditCategory";
 import ListCategory from "../components/categories/ListCategory";
+import { useDispatch, useSelector } from "react-redux";
+import { setError, setMessage } from "../redux/actions/commonAction";
+import commonReducer from './../redux/reducers/commonReducer'
+
 const { Header, Sider, Content } = Layout;
 
 function DashboardPage() {
@@ -38,6 +41,22 @@ function DashboardPage() {
   const [collapsed, setCollapsed] = useState(false);
 
   const navigate = useNavigate();
+  
+  const msg = useSelector((state) => state.commonReducer.message);
+  const err = useSelector((state) => state.commonReducer.error);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (msg) {
+      dispatch(setMessage(''))
+      message.success(msg)
+    }
+    if (err) {
+      dispatch(setError(''))
+      message.error(err)
+    }
+  }, [msg, err])
+  
 
   const siteLayoutStyle = { marginLeft: marginLeft };
   const {
@@ -184,7 +203,11 @@ function DashboardPage() {
             <Route path="/" element={<Home></Home>}></Route>
             <Route
               path="/categories/add"
-              element={<AddOrEditCategory></AddOrEditCategory>}
+              element={<AddOrEditCategory key='a'></AddOrEditCategory>}
+            ></Route>
+            <Route
+              path="/categories/update/:id"
+              element={<AddOrEditCategory key='u'></AddOrEditCategory>}
             ></Route>
             <Route
               path="/categories/list"
@@ -200,4 +223,8 @@ function DashboardPage() {
   );
 }
 
+
+
 export default DashboardPage;
+
+
